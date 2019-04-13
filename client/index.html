@@ -73,9 +73,7 @@ input[type=submit]:hover {
 </style>
 </head>
 <body>
-
 <div class="container">
-  <form action="http://localhost:5000/add">
     <h3>Big Data, Small World</h3>
     <label for="fname">First Name</label>
     <input type="text" id="fname" name="fname" placeholder="John">
@@ -93,18 +91,47 @@ input[type=submit]:hover {
 
     <div class="slidecontainer">
       <label for="height">How tall are you?</label>
-      <input type="range" min="0" max="48" value="24" class="slider" name="height">
+      <input id="height" type="range" min="0" max="48" value="24" class="slider" name="height">
 
       <label for="marvel">How much to do you like Marvel movies?</label>
-      <input type="range" min="1" max="10" value="5" class="slider" name="marvel">
+      <input id="marvel" type="range" min="1" max="10" value="5" class="slider" name="marvel">
 
       <label for="pet">How many pets do you have at home?</label>
-      <input type="range" min="0" max="5" value="3" class="slider" name="pet">
+      <input id="pet" type="range" min="0" max="5" value="3" class="slider" name="pet">
     </div>
-    <input type="hidden" name="redirect" value="http://localhost:8000/client/graph.html">
-    <input type="submit" value="Submit">
-  </form>
-</div>
+
+    <input type="submit" value="Submit" onclick="submit()">
+  </div>
+<script>
+  function submit() {
+      var xhttp = new XMLHttpRequest();
+      var url = "http://localhost:5000/add";
+      xhttp.open("POST", url, true);
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.onreadystatechange = function () {
+          window.location.href = "graph.html";
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+          }
+      };
+      var fname = document.getElementById("fname").value.trim();
+      var lname = document.getElementById("lname").value.trim();
+      var select = document.getElementById("track");
+      var track = select.options[select.selectedIndex].text;
+      var height = document.getElementById("height").value;
+      var marvel = document.getElementById("marvel").value;
+      var pet = document.getElementById("pet").value;
+      // Data which will write in a file.
+      let data = {
+                  "fname": fname,
+                  "lname": lname,
+                  "track": track,
+                  "height": height,
+                  "marvel": marvel,
+                  "pet": pet
+                };
+      xhttp.send(JSON.stringify(data));
+  }
+</script>
 
 </body>
 </html>
